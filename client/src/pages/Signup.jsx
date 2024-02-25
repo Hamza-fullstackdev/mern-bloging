@@ -4,21 +4,24 @@ import { Button, Label, TextInput, Alert } from "flowbite-react";
 import { IoPerson } from "react-icons/io5";
 import { AiOutlineMail } from "react-icons/ai";
 import { RiLockPasswordLine } from "react-icons/ri";
+import { loginStart, loginFailure } from "../redux/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 const Signup = () => {
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState(null);
   const [showError, setShowError] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const {loading, error}= useSelector(state =>state.user);
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value,
+      [e.target.id]: e.target.value.trim(),
     });
   };
   const handleFormData = async (e) => {
-    setLoading(true);
+    dispatch(loginStart());
     e.preventDefault();
     const res = await fetch("/api/user/signup", {
       credentials: "include",
@@ -29,10 +32,9 @@ const Signup = () => {
       body: JSON.stringify(formData),
     });
     const data = await res.json();
-    setLoading(false);
     if (data.statusCode === 400) {
       setShowError(true);
-      setError(data.message);
+      dispatch(loginFailure(data.message));
     }
     if (data.statusCode === 201) {
       navigate("/login");

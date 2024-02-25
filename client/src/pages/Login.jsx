@@ -3,22 +3,25 @@ import { Alert, Button, Label, TextInput } from "flowbite-react";
 import { AiOutlineMail } from "react-icons/ai";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
+import { loginStart,loginFailure,loginSuccess } from "../redux/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 const Login = () => {
   const [formData, setFormData] = useState({});
   const [showError,setShowError] = useState(false);
-  const [error,setError]= useState(null);
-  const [loading, setLoading] = useState(false);
+  const {loading, error} =useSelector(state=>state.user);
   const navigate=useNavigate();
+  const dispatch= useDispatch();
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value,
+      [e.target.id]: e.target.value.trim(),
     });
   };
 
   const handleFormData = async (e) => {
-    setLoading(true);
+    dispatch(loginStart());
     e.preventDefault();
     const res= await fetch('http://127.0.0.1:5000/api/user/login',{
       credentials:'include',
@@ -29,12 +32,12 @@ const Login = () => {
       body:JSON.stringify(formData)
     })
     const data= await res.json();
-    setLoading(false);
     if(data.statusCode===400){
       setShowError(true);
-      setError(data.message);
+      dispatch(loginFailure(data.message));
     }
     if(data._id){
+      dispatch(loginSuccess(data));
       navigate('/')
     }
 };
