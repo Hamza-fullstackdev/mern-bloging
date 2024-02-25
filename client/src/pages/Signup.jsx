@@ -5,7 +5,9 @@ const Signup = () => {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
   const [showError, setShowError] = useState(false);
-  const navigate= useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -13,6 +15,7 @@ const Signup = () => {
     });
   };
   const handleFormData = async (e) => {
+    setLoading(true);
     e.preventDefault();
     const res = await fetch("/api/user/signup", {
       credentials: "include",
@@ -23,12 +26,13 @@ const Signup = () => {
       body: JSON.stringify(formData),
     });
     const data = await res.json();
+    setLoading(false);
     if (data.statusCode === 400) {
       setShowError(true);
       setError(data.message);
     }
-    if(data.statusCode === 201) {
-      navigate('/login');
+    if (data.statusCode === 201) {
+      navigate("/login");
     }
   };
   return (
@@ -50,9 +54,9 @@ const Signup = () => {
         </div>
         <div className='sm:mt-0 flex-1'>
           {showError && (
-             <Alert color="failure" onDismiss={() => setShowError(!showError)}>
-             <span className="font-medium">Error!</span> {error}
-           </Alert>
+            <Alert color='failure' onDismiss={() => setShowError(!showError)}>
+              <span className='font-medium'>Error!</span> {error}
+            </Alert>
           )}
           <h2 className='text-xl font-semibold md:text-center'>
             Register Your Account
@@ -88,10 +92,19 @@ const Signup = () => {
                 onChange={handleChange}
               />
             </div>
-            <Button gradientDuoTone={"purpleToBlue"} type='submit'>
+            <Button
+              gradientDuoTone={"purpleToBlue"}
+              type='submit'
+              disabled={loading}
+            >
               Submit
             </Button>
-            <span className="text-sm">Already have a account? <Link className="text-green-500" to={'/login'}>Login now</Link></span>
+            <span className='text-sm'>
+              Already have a account?{" "}
+              <Link className='text-green-500' to={"/login"}>
+                Login now
+              </Link>
+            </span>
           </form>
         </div>
       </div>
