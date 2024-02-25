@@ -14,7 +14,7 @@ const Signup = () => {
   };
   const handleFormData = async (e) => {
     e.preventDefault();
-    const res = await fetch("http://127.0.0.1:5000/api/user/signup", {
+    const res = await fetch("/api/user/signup", {
       credentials: "include",
       method: "POST",
       headers: {
@@ -28,14 +28,14 @@ const Signup = () => {
       setError(data.message);
     }
     if(data.statusCode === 201) {
-      navigate('/');
+      navigate('/login');
     }
   };
   return (
     <div className='min-h-screen mt-20'>
       <div className='p-4 flex mx-auto max-w-4xl flex-col md:flex-row gap-4 md:item-center'>
         <div className='flex-1 my-auto'>
-          <Link to={"/"} className='font-bold dark:text-white text-4xl'>
+          <Link to={"/"} className='font-bold dark:text-white text-3xl'>
             <span className='px-2 py-1 bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 text-white rounded'>
               Bloging
             </span>
@@ -91,6 +91,7 @@ const Signup = () => {
             <Button gradientDuoTone={"purpleToBlue"} type='submit'>
               Submit
             </Button>
+            <span className="text-sm">Already have a account? <Link className="text-green-500" to={'/login'}>Login now</Link></span>
           </form>
         </div>
       </div>
