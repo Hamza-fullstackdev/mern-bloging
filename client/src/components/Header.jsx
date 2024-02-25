@@ -13,9 +13,9 @@ const Header = () => {
         className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'
       >
         <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded'>
-          Mern's
+          Bloging
         </span>
-        Blog
+        Application
       </Link>
       <form>
         <TextInput
@@ -33,7 +33,7 @@ const Header = () => {
           <FaMoon />
         </Button>
         <Link to={""}>
-          <Button pill gradientDuoTone={"purpleToBlue"}>
+          <Button pill gradientDuoTone={"purpleToBlue"} outline>
             Signup
           </Button>
         </Link>
