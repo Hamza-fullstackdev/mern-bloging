@@ -3,11 +3,12 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 
+import userRouter from "./routes/user.route.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
-app.use(express.json());
 
+app.use(express.json());
 app.use(
   cors({
     credentials: true,
@@ -16,7 +17,7 @@ app.use(
 );
 
 mongoose
-  .connect('mongodb://127.0.0.1:27017/mern-bloging-application')
+  .connect("mongodb://127.0.0.1:27017/mern-bloging-application")
   .then(() => {
     console.log("Connected to Database");
   })
@@ -24,10 +25,18 @@ mongoose
     console.log("Error connected to Database", err);
   });
 
+app.use("/api/user", userRouter);
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+app.use((err,req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
+  res.status(statusCode).send({
+    success: false,
+    statusCode,
+    message,
+  });
+})
