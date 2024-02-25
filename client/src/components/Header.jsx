@@ -12,7 +12,7 @@ const Header = () => {
         to={"/"}
         className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'
       >
-        <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded'>
+        <span className='px-2 py-1 bg-gradient-to-r  from-purple-500 via-indigo-500 to-blue-500 text-white rounded'>
           Bloging
         </span>
         Application
@@ -32,7 +32,7 @@ const Header = () => {
         <Button className='w-12 h-10 hidden sm:inline' pill color='gray'>
           <FaMoon />
         </Button>
-        <Link to={""}>
+        <Link to={"/signup"}>
           <Button pill gradientDuoTone={"purpleToBlue"} outline>
             Signup
           </Button>
