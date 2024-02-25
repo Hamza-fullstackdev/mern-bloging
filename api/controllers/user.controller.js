@@ -28,11 +28,11 @@ export const signup = async (req, res, next) => {
     const saveUserInfo = await user.save();
     if (saveUserInfo) {
       res.send({
-        status: "success",
+        statusCode: 201,
         message: "User created successfully",
       });
     } else {
-      next(errorHandler(404,"User creation failed"));
+      next(errorHandler(404, "User creation failed"));
     }
   } catch (err) {
     return next(err);
