@@ -55,8 +55,6 @@ export const login = async (req, res, next) => {
     if (user) {
       const token = jwt.sign({ id: user._id }, "mern-bloging application");
       const { password: pass, ...rest } = user._doc;
-      const oneYear = 365 * 24 * 60 * 60 * 1000; // 1 year in milliseconds
-      const expirationDate = new Date(Date.now() + oneYear);
       res.cookie("access_token", token).status(200).json(rest);
     }
   } catch (error) {

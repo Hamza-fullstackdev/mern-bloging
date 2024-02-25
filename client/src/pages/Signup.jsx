@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Label, TextInput, Alert } from "flowbite-react";
+import { IoPerson } from "react-icons/io5";
+import { AiOutlineMail } from "react-icons/ai";
+import { RiLockPasswordLine } from "react-icons/ri";
 const Signup = () => {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
@@ -68,6 +71,7 @@ const Signup = () => {
                 type='text'
                 placeholder='Username'
                 className='w-full'
+                rightIcon={IoPerson}
                 id='username'
                 onChange={handleChange}
               />
@@ -78,6 +82,7 @@ const Signup = () => {
                 type='email'
                 placeholder='Email'
                 className='w-full'
+                rightIcon={AiOutlineMail}
                 id='email'
                 onChange={handleChange}
               />
@@ -88,6 +93,7 @@ const Signup = () => {
                 type='text'
                 placeholder='Password'
                 className='w-full'
+                rightIcon={RiLockPasswordLine}
                 id='password'
                 onChange={handleChange}
               />
