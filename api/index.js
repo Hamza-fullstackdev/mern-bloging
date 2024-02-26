@@ -7,7 +7,7 @@ import userRouter from "./routes/user.route.js";
 import cookieParser from "cookie-parser";
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 
 app.use(express.json());
 app.use(cookieParser());
@@ -19,7 +19,7 @@ app.use(
 );
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/mern-bloging-application")
+  .connect(process.env.MONGODB_URL)
   .then(() => {
     console.log("Connected to Database");
   })
@@ -33,7 +33,7 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-app.use((err,req, res, next) => {
+app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
   res.status(statusCode).send({
@@ -41,4 +41,4 @@ app.use((err,req, res, next) => {
     statusCode,
     message,
   });
-})
+});

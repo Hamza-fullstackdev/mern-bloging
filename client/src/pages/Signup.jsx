@@ -38,7 +38,7 @@ const Signup = () => {
       dispatch(loginFailure(data.message));
     }
     if (data.statusCode === 201) {
-      navigate("/login");
+      navigate("/");
     }
   };
   return (

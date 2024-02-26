@@ -53,9 +53,47 @@ export const login = async (req, res, next) => {
     const decryptPassword = bcrypt.compareSync(password, user.password);
     if (!decryptPassword) return next(errorHandler(400, "Wrong Credentials"));
     if (user) {
-      const token = jwt.sign({ id: user._id }, "mern-bloging application");
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_TOKEN);
       const { password: pass, ...rest } = user._doc;
       res.cookie("access_token", token).status(200).json(rest);
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+export const googleAuth = async (req, res, next) => {
+  try {
+    const isUserExist = await User.findOne({ email: req.body.email });
+    if (isUserExist) {
+      const token = jwt.sign({ id: isUserExist._id }, process.env.JWT_SECRET_TOKEN);
+      const { password: pass, ...rest } = isUserExist._doc;
+      res
+      .cookie("access_token", token)
+      .status(200)
+      .json(rest);
+    } else {
+      const generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      const newUser = new User({
+        username: req.body.username,
+        email: req.body.email,
+        password: generatedPassword,
+        avatar: req.body.avatar,
+      });
+      try {
+        await newUser.save();
+        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_TOKEN);
+        const { password: pass, ...rest } = newUser._doc;
+        res
+        .cookie("access_token", token)
+        .status(200)
+        .json(rest);
+      } catch (error) {
+        next(error);
+      }
     }
   } catch (error) {
     next(error);

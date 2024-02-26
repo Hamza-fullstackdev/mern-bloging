@@ -24,7 +24,6 @@ const Login = () => {
       [e.target.id]: e.target.value.trim(),
     });
   };
-
   const handleFormData = async (e) => {
     dispatch(loginStart());
     e.preventDefault();
