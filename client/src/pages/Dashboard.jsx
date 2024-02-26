@@ -17,7 +17,7 @@ const Dashboard = () => {
       <div className=''>
         <Sidebar />
       </div>
-      <div className=''>{tab === "profile" && <Profile />}</div>
+      {tab === "profile" && <Profile />}
     </div>
   );
 };
