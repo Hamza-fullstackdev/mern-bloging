@@ -6,11 +6,12 @@ import { AiOutlineMail } from "react-icons/ai";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { loginStart, loginFailure } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Oauth from "../components/Oauth";
 
 const Signup = () => {
   const [formData, setFormData] = useState({});
   const [showError, setShowError] = useState(false);
-  const {loading, error}= useSelector(state =>state.user);
+  const { loading, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -101,12 +102,13 @@ const Signup = () => {
               />
             </div>
             <Button
-              gradientDuoTone={"purpleToBlue"}
+              gradientDuoTone={"greenToBlue"}
               type='submit'
               disabled={loading}
             >
-              Submit
+              Signup
             </Button>
+            <Oauth />
             <span className='text-sm'>
               Already have a account?{" "}
               <Link className='text-green-500' to={"/login"}>

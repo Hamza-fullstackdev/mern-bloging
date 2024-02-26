@@ -3,15 +3,20 @@ import { Alert, Button, Label, TextInput } from "flowbite-react";
 import { AiOutlineMail } from "react-icons/ai";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
-import { loginStart,loginFailure,loginSuccess } from "../redux/user/userSlice";
+import {
+  loginStart,
+  loginFailure,
+  loginSuccess,
+} from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Oauth from "../components/Oauth";
 
 const Login = () => {
   const [formData, setFormData] = useState({});
-  const [showError,setShowError] = useState(false);
-  const {loading, error} =useSelector(state=>state.user);
-  const navigate=useNavigate();
-  const dispatch= useDispatch();
+  const [showError, setShowError] = useState(false);
+  const { loading, error } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({
@@ -23,32 +28,32 @@ const Login = () => {
   const handleFormData = async (e) => {
     dispatch(loginStart());
     e.preventDefault();
-    const res= await fetch('http://127.0.0.1:5000/api/user/login',{
-      credentials:'include',
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json'
+    const res = await fetch("/api/user/login", {
+      credentials: "include",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-      body:JSON.stringify(formData)
-    })
-    const data= await res.json();
-    if(data.statusCode===400){
+      body: JSON.stringify(formData),
+    });
+    const data = await res.json();
+    if (data.statusCode === 400) {
       setShowError(true);
       dispatch(loginFailure(data.message));
     }
-    if(data._id){
+    if (data._id) {
       dispatch(loginSuccess(data));
-      navigate('/')
+      navigate("/");
     }
-};
+  };
   return (
     <div className='min-h-screen mt-20'>
       <div className='mx-auto max-w-md p-4'>
-        {
-          showError &&  <Alert color="failure" onDismiss={() => setShowError(!showError)}>
-          <span className="font-medium">Error!</span> {error}
-        </Alert>
-        }
+        {showError && (
+          <Alert color='failure' onDismiss={() => setShowError(!showError)}>
+            <span className='font-medium'>Error!</span> {error}
+          </Alert>
+        )}
         <h2 className='text-2xl font-semibold text-center mb-2'>
           Login to your account
         </h2>
@@ -60,7 +65,7 @@ const Login = () => {
               placeholder='youremail@gmail.com'
               rightIcon={AiOutlineMail}
               className='w-100'
-              id="email"
+              id='email'
               onChange={handleChange}
             />
           </div>
@@ -71,18 +76,19 @@ const Login = () => {
               placeholder='********'
               rightIcon={RiLockPasswordLine}
               className='w-100'
-              id="password"
+              id='password'
               onChange={handleChange}
             />
           </div>
           <Button
-          disabled={loading}
+            disabled={loading}
             type='submit'
-            gradientDuoTone={"purpleToBlue"}
-            className='mt-4'
+            gradientDuoTone={"greenToBlue"}
+            className='mt-4 mb-2'
           >
             Submit
           </Button>
+          <Oauth />
           <span className='text-sm mt-1'>
             Dont have a account?{" "}
             <Link className='text-green-500' to={"/signup"}>
