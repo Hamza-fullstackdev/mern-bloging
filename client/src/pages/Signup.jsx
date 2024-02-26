@@ -46,7 +46,7 @@ const Signup = () => {
       <div className='p-4 flex mx-auto max-w-4xl flex-col md:flex-row gap-4 md:item-center'>
         <div className='flex-1 my-auto'>
           <Link to={"/"} className='font-bold dark:text-white text-3xl'>
-            <span className='px-2 py-1 bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 text-white rounded'>
+            <span className='px-2 py-1 bg-gradient-to-r  from-pink-500  to-orange-400 text-white rounded'>
               Bloging
             </span>
             Application
