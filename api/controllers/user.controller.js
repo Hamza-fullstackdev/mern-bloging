@@ -62,17 +62,16 @@ export const login = async (req, res, next) => {
   }
 };
 
-
 export const googleAuth = async (req, res, next) => {
   try {
     const isUserExist = await User.findOne({ email: req.body.email });
     if (isUserExist) {
-      const token = jwt.sign({ id: isUserExist._id }, process.env.JWT_SECRET_TOKEN);
+      const token = jwt.sign(
+        { id: isUserExist._id },
+        process.env.JWT_SECRET_TOKEN
+      );
       const { password: pass, ...rest } = isUserExist._doc;
-      res
-      .cookie("access_token", token)
-      .status(200)
-      .json(rest);
+      res.cookie("access_token", token).status(200).json(rest);
     } else {
       const generatedPassword =
         Math.random().toString(36).slice(-8) +
@@ -85,16 +84,43 @@ export const googleAuth = async (req, res, next) => {
       });
       try {
         await newUser.save();
-        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_TOKEN);
+        const token = jwt.sign(
+          { id: newUser._id },
+          process.env.JWT_SECRET_TOKEN
+        );
         const { password: pass, ...rest } = newUser._doc;
-        res
-        .cookie("access_token", token)
-        .status(200)
-        .json(rest);
+        res.cookie("access_token", token).status(200).json(rest);
       } catch (error) {
         next(error);
       }
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateUser = async (req, res, next) => {
+  if (req.user.id !== req.params.id) {
+    return next(
+      errorHandler(401, "You are not authorized to update this user")
+    );
+  }
+  if (req.body.password) {
+    if (req.body.password < 6) {
+      return next(errorHandler(400, "Password should be atleast 6 characters"));
+    }
+  }
+  req.body.password = bcrypt.hashSync(req.body.password, 10);
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id,{
+      $set: {
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password,
+        avatar: req.body.avatar,
+  }},{new: true});
+  
+    res.status(200).json(user);
   } catch (error) {
     next(error);
   }
