@@ -20,7 +20,7 @@ const SidebarCom = () => {
     }
   }, [location.search]);
   return (
-    <Sidebar className="w-full md:w-56">
+    <Sidebar className='w-full md:w-56'>
       <Sidebar.Items>
         <Sidebar.ItemGroup>
           <Sidebar.Item
