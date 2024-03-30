@@ -23,7 +23,7 @@ import {
   deleteUserStart,
   deleteUserFailure,
   signoutSuccess,
-  signoutFailure
+  signoutFailure,
 } from "../redux/user/userSlice";
 
 const Profile = () => {
@@ -280,8 +280,19 @@ const Profile = () => {
           gradientDuoTone={"greenToBlue"}
           className='w-100 mt-4 mb-2'
         >
-          Submit
+          Update
         </Button>
+        {currentuser.isAdmin && (
+          <Link to={"/create-post"}>
+            <Button
+              type='button'
+              gradientDuoTone={"pinkToOrange"}
+              className='w-full'
+            >
+              Create A Post
+            </Button>
+          </Link>
+        )}
         <div className='mt-3 flex justify-between'>
           <Link>
             <Button color='red' onClick={() => setShowDeleteModal(true)}>

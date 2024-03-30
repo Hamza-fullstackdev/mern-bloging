@@ -7,6 +7,8 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import Createpost from "./pages/Createpost";
+import AdminProtectedRoutes from "./components/AdminProtectedRoutes";
 
 const App = () => {
   return (
@@ -19,6 +21,9 @@ const App = () => {
           <Route path='/login' element={<Login />} />
           <Route element={<ProtectedRoutes />}>
             <Route path='/dashboard' element={<Dashboard />} />
+          </Route>
+          <Route element={<AdminProtectedRoutes />}>
+            <Route path='/create-post' element={<Createpost />} />
           </Route>
         </Routes>
         <Footercom />
