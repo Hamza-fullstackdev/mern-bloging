@@ -1,8 +1,9 @@
-import { Alert, Button, TextInput } from "flowbite-react";
+import { Alert, Button, Modal, TextInput } from "flowbite-react";
 import React, { useEffect, useRef, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { IoMdLock } from "react-icons/io";
+import {HiOutlineExclamationCircle } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -21,18 +22,20 @@ import {
 } from "../redux/user/userSlice";
 
 const Profile = () => {
-  const [imageFile, setImageFile] = useState(null);
-  const [showError, setShowError] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(null);
-  const [imageFileUrl, setImageFileUrl] = useState(null);
-  const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
-  const [imageFileUploadError, setImageFileUploadError] = useState(null);
-  const [formData, setFormData] = useState({});
+  const [imageFile, setImageFile] = useState(null); // use state for image files
+  const [showError, setShowError] = useState(false); // use state to check when to show error
+  const [showSuccess, setShowSuccess] = useState(false); // use state to check when to show success
+  const [showSuccessMessage, setShowSuccessMessage] = useState(null); // use state to check when to show success Messsage
+  const [imageFileUrl, setImageFileUrl] = useState(null); // use state to set new image url
+  const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null); // use state to set new image upload progress
+  const [imageFileUploadError, setImageFileUploadError] = useState(null); // use state to set new image upload error
+  const [showDeleteModal, setShowDeleteModal] = useState(false); // use state to show delete modal
+  const [formData, setFormData] = useState({}); //usestate to get form details
   const fileRef = useRef();
-  const { currentuser, error } = useSelector((state) => state.user);
+  const { currentuser, error } = useSelector((state) => state.user); // Getting data from redux user slice
   const dispatch = useDispatch();
 
+  // Image Uploading Functionality Starts Here
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -79,7 +82,9 @@ const Profile = () => {
       }
     );
   };
+  // Image Uploading functionality ends here
 
+  //  Update User Api Hits Here
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -110,10 +115,17 @@ const Profile = () => {
       dispatch(updateFailure(data.message));
     }
   };
+  //  Update User Api Hits Ends Here
+
+  // Delete User Acount Api Hits Here
+  const handleDelete=(()=>{
+
+  })
   return (
     <div className='max-w-lg mx-auto w-full mt-10'>
       <form className='flex flex-col p-4' onSubmit={handleFormData}>
         <h2 className='text-2xl font-semibold text-center mb-4'>My Profile</h2>
+        {/* Errors to show success and error messages */}
         {showError ? <Alert color={"failure"}>{error}</Alert> : ""}
         {showSuccess ? (
           <Alert color={"success"}>{showSuccessMessage}</Alert>
@@ -162,9 +174,36 @@ const Profile = () => {
             }`}
           />
         </div>
+        {/* Error To Show Image Upload Errors */}
         {imageFileUploadError && (
           <Alert color={"failure"}>{imageFileUploadError}</Alert>
         )}
+        {/* Show Delete Modal */}
+        <Modal
+          show={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+          popup
+          size={'md'}
+        >
+          <Modal.Header/>
+          <Modal.Body>
+            <div className="text-center">
+              <HiOutlineExclamationCircle className="h-14 w-14 mx-auto text-gray-400 dark:text-gray-200 mb-4"/>
+              <h3 className="mb-5 text-lg text-gray-600 dark:text-gray-400">Are you sure you want to delete your account?</h3>
+              <div className="flex flex-row justify-center gap-4">
+                <Button onClick={handleDelete} color="failure">
+                  Confirm
+                </Button>
+                <Button
+                  color="gray"
+                  onClick={() => setShowDeleteModal(false)}
+                >
+                  No, Cancel
+                </Button>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
         <div className='mt-5'>
           <TextInput
             type='text'
@@ -201,7 +240,9 @@ const Profile = () => {
         </Button>
         <div className='mt-3 flex justify-between'>
           <Link>
-            <Button color='red'>Delete Account</Button>
+            <Button color='red' onClick={() => setShowDeleteModal(true)}>
+              Delete Account
+            </Button>
           </Link>
           <Link>
             <Button color='yellow'>Sign Out</Button>
