@@ -3,9 +3,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { IoMdLock } from "react-icons/io";
-import {HiOutlineExclamationCircle } from "react-icons/hi";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   getDownloadURL,
   getStorage,
@@ -19,6 +19,9 @@ import {
   updateStart,
   updateSuccess,
   updateFailure,
+  deleteUserSuccess,
+  deleteUserStart,
+  deleteUserFailure,
 } from "../redux/user/userSlice";
 
 const Profile = () => {
@@ -34,6 +37,7 @@ const Profile = () => {
   const fileRef = useRef();
   const { currentuser, error } = useSelector((state) => state.user); // Getting data from redux user slice
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Image Uploading Functionality Starts Here
   const handleImageChange = (e) => {
@@ -118,9 +122,26 @@ const Profile = () => {
   //  Update User Api Hits Ends Here
 
   // Delete User Acount Api Hits Here
-  const handleDelete=(()=>{
-
-  })
+  const handleDelete = async (e) => {
+    dispatch(deleteUserStart());
+    e.preventDefault();
+    const res = await fetch(`/api/user/delete/${currentuser._id}`, {
+      credentials: "include",
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+    if (data) {
+      setShowDeleteModal(false);
+      dispatch(deleteUserSuccess(data));
+      navigate("/login");
+    }
+    if (data.statusCode === 401) {
+      dispatch(deleteUserFailure(data.message));
+    }
+  };
   return (
     <div className='max-w-lg mx-auto w-full mt-10'>
       <form className='flex flex-col p-4' onSubmit={handleFormData}>
@@ -183,21 +204,20 @@ const Profile = () => {
           show={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           popup
-          size={'md'}
+          size={"md"}
         >
-          <Modal.Header/>
+          <Modal.Header />
           <Modal.Body>
-            <div className="text-center">
-              <HiOutlineExclamationCircle className="h-14 w-14 mx-auto text-gray-400 dark:text-gray-200 mb-4"/>
-              <h3 className="mb-5 text-lg text-gray-600 dark:text-gray-400">Are you sure you want to delete your account?</h3>
-              <div className="flex flex-row justify-center gap-4">
-                <Button onClick={handleDelete} color="failure">
+            <div className='text-center'>
+              <HiOutlineExclamationCircle className='h-14 w-14 mx-auto text-gray-400 dark:text-gray-200 mb-4' />
+              <h3 className='mb-5 text-lg text-gray-600 dark:text-gray-400'>
+                Are you sure you want to delete your account?
+              </h3>
+              <div className='flex flex-row justify-center gap-4'>
+                <Button onClick={handleDelete} color='failure'>
                   Confirm
                 </Button>
-                <Button
-                  color="gray"
-                  onClick={() => setShowDeleteModal(false)}
-                >
+                <Button color='gray' onClick={() => setShowDeleteModal(false)}>
                   No, Cancel
                 </Button>
               </div>
