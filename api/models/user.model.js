@@ -20,6 +20,10 @@ const userScheama = new mongoose.Schema(
       default:
         "https://png.pngtree.com/png-clipart/20190921/original/pngtree-user-avatar-boy-png-image_4693645.jpg",
     },
+    isAdmin:{
+      type:Boolean,
+      default:false
+    }
   },
   { timestamps: true }
 );

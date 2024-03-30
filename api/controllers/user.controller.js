@@ -53,7 +53,7 @@ export const login = async (req, res, next) => {
     const decryptPassword = bcrypt.compareSync(password, user.password);
     if (!decryptPassword) return next(errorHandler(400, "Wrong Credentials"));
     if (user) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_TOKEN);
+      const token = jwt.sign({ id: user._id,isAdmin: user.isAdmin }, process.env.JWT_SECRET_TOKEN);
       const { password: pass, ...rest } = user._doc;
       res.cookie("access_token", token).status(200).json(rest);
     }
@@ -67,7 +67,7 @@ export const googleAuth = async (req, res, next) => {
     const isUserExist = await User.findOne({ email: req.body.email });
     if (isUserExist) {
       const token = jwt.sign(
-        { id: isUserExist._id },
+        { id: isUserExist._id , isAdmin:isUserExist.isAdmin},
         process.env.JWT_SECRET_TOKEN
       );
       const { password: pass, ...rest } = isUserExist._doc;
@@ -85,7 +85,7 @@ export const googleAuth = async (req, res, next) => {
       try {
         await newUser.save();
         const token = jwt.sign(
-          { id: newUser._id },
+          { id: newUser._id, isAdmin:newUser.isAdmin },
           process.env.JWT_SECRET_TOKEN
         );
         const { password: pass, ...rest } = newUser._doc;
