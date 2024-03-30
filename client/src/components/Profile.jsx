@@ -22,6 +22,8 @@ import {
   deleteUserSuccess,
   deleteUserStart,
   deleteUserFailure,
+  signoutSuccess,
+  signoutFailure
 } from "../redux/user/userSlice";
 
 const Profile = () => {
@@ -140,6 +142,28 @@ const Profile = () => {
     }
     if (data.statusCode === 401) {
       dispatch(deleteUserFailure(data.message));
+    }
+  };
+  // Delete User Acount Api Hits Ends Here
+
+  // Signout User APi Hits Here
+
+  const handleSignout = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch("/api/user/signout", {
+        credentials: "include",
+        method: "POSt",
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(signoutSuccess());
+        navigate("/login");
+      }
+    } catch (error) {
+      dispatch(signoutFailure(error));
     }
   };
   return (
@@ -265,7 +289,9 @@ const Profile = () => {
             </Button>
           </Link>
           <Link>
-            <Button color='yellow'>Sign Out</Button>
+            <Button color='yellow' onClick={handleSignout}>
+              Sign Out
+            </Button>
           </Link>
         </div>
       </form>
