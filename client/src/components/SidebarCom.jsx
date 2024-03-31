@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Sidebar } from "flowbite-react";
-import {
-  HiArrowSmRight,
-  HiInbox,
-  HiShoppingBag,
-  HiUser,
-  HiViewBoards,
-} from "react-icons/hi";
-
+import { HiArrowSmRight, HiDocumentText, HiUser } from "react-icons/hi";
+import { useSelector } from "react-redux";
 const SidebarCom = () => {
   const location = useLocation();
   const [tab, settab] = useState("");
+  const { currentuser } = useSelector((state) => state.user);
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabFromUrl = urlParams.get("tab");
@@ -22,33 +17,29 @@ const SidebarCom = () => {
   return (
     <Sidebar className='w-full md:w-56'>
       <Sidebar.Items>
-        <Sidebar.ItemGroup>
-          <Sidebar.Item
-            active={tab === "profile"}
-            href='#'
-            icon={HiUser}
-            label='user'
-            labelColor='dark'
-          >
-            Profile
-          </Sidebar.Item>
-          <Sidebar.Item
-            href='#'
-            icon={HiViewBoards}
-            label='Pro'
-            labelColor='dark'
-          >
-            Kanban
-          </Sidebar.Item>
-          <Sidebar.Item href='#' icon={HiInbox} label='3'>
-            Inbox
-          </Sidebar.Item>
-          <Sidebar.Item href='#' icon={HiUser}>
-            Users
-          </Sidebar.Item>
-          <Sidebar.Item href='#' icon={HiShoppingBag}>
-            Products
-          </Sidebar.Item>
+        <Sidebar.ItemGroup className="flex flex-col gap-1">
+          <Link to={"/dashboard?tab=profile"}>
+            <Sidebar.Item
+              active={tab === "profile"}
+              as={"div"}
+              icon={HiUser}
+              label={currentuser.isAdmin?'Admin':'User'}
+              labelColor='dark'
+            >
+              Profile
+            </Sidebar.Item>
+          </Link>
+          {currentuser.isAdmin && (
+            <Link to={"/dashboard?tab=posts"}>
+              <Sidebar.Item
+                active={tab === "posts"}
+                as={"div"}
+                icon={HiDocumentText}
+              >
+                Posts
+              </Sidebar.Item>
+            </Link>
+          )}
           <Sidebar.Item href='#' icon={HiArrowSmRight}>
             Sign Out
           </Sidebar.Item>
