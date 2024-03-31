@@ -33,11 +33,11 @@ const Signup = () => {
       body: JSON.stringify(formData),
     });
     const data = await res.json();
-    if (data.statusCode === 400) {
+    if (!res.ok) {
       setShowError(true);
       dispatch(loginFailure(data.message));
     }
-    if (data.statusCode === 201) {
+    if (res.ok) {
       navigate("/");
     }
   };

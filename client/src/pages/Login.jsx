@@ -36,11 +36,11 @@ const Login = () => {
       body: JSON.stringify(formData),
     });
     const data = await res.json();
-    if (data.statusCode === 400) {
+    if (!res.ok) {
       setShowError(true);
       dispatch(loginFailure(data.message));
     }
-    if (data._id) {
+    if (res.ok) {
       dispatch(loginSuccess(data));
       navigate("/");
     }
